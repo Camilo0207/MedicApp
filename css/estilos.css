@@ -3,38 +3,50 @@
    ========================================================================== */
 
 /* Importamos la fuente Epilogue desde Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght=400;600;700&display=swap');
 
-body {
+/* Forzamos a que el html y el body utilicen el 100% real de la pantalla visible */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
     font-family: 'Epilogue', sans-serif;
     background-color: #f8f9fa;
     color: #212529;
+    overflow-x: hidden; /* Evita scrolls horizontales raros en celular */
 }
 
-/* Contenedor del Celular Simulado */
+/* Contenedor del Celular Simulado: Comportamiento Base (MÓVIL PRIMERO) */
 .contenedor-movil {
-    max-width: 420px;
+    width: 100% !important;   /* Abarca todo el ancho del celular */
+    height: 100vh !important;  /* Utiliza el 100% de la altura de la pantalla móvil */
+    max-width: 100%;           /* Rompe el límite de los 420px solo en móviles */
     border-radius: 0px;
     overflow: hidden;
-    /* Evita que los fondos se salgan de los bordes redondeados */
     position: relative;
+    background-color: #FFFFFF; /* Evita transparencias molestas sobre el fondo gris */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Vista elegante de Mockup en pantallas de escritorio */
+/* Vista elegante de Mockup SÓLO en pantallas de escritorio (Monitores y Laptops) */
 @media (min-width: 576px) {
+    body {
+        /* Un fondo sutilmente oscuro en PC para que el mockup de celular resalte */
+        background-color: #e9ecef; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
     .contenedor-movil {
-        border-radius: 24px;
-        height: 850px;
+        max-width: 420px;      /* Volvemos a encajonar el ancho del mockup */
+        height: 850px !important; /* Altura controlada de teléfono en PC */
+        border-radius: 24px;   /* Esquinas curvas de teléfono premium */
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12); /* Sombra elegante */
+        margin: auto;
     }
 }
-
-/* Ocultar barras de scroll nativas pero manteniendo la funcionalidad táctil */
-.contenedor-movil::-webkit-scrollbar,
-.structure-menu::-webkit-scrollbar {
-    width: 0px;
-    display: none;
-}
-
 /* --- COMPONENTES ATÓMICOS REUTILIZABLES (BOTONES E INPUTS) --- */
 
 .btn {
