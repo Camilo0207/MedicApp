@@ -1,0 +1,653 @@
+/* ==========================================================================
+   1. CONFIGURACIÓN GENERAL Y ESTILOS GLOBALES (CORE APP)
+   ========================================================================== */
+
+/* Importamos la fuente Epilogue desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Epilogue', sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+/* Contenedor del Celular Simulado */
+.contenedor-movil {
+    max-width: 420px;
+    border-radius: 0px;
+    overflow: hidden;
+    /* Evita que los fondos se salgan de los bordes redondeados */
+    position: relative;
+}
+
+/* Vista elegante de Mockup en pantallas de escritorio */
+@media (min-width: 576px) {
+    .contenedor-movil {
+        border-radius: 24px;
+        height: 850px;
+    }
+}
+
+/* Ocultar barras de scroll nativas pero manteniendo la funcionalidad táctil */
+.contenedor-movil::-webkit-scrollbar,
+.structure-menu::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+}
+
+/* --- COMPONENTES ATÓMICOS REUTILIZABLES (BOTONES E INPUTS) --- */
+
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    margin: 5px;
+    transition: all 0.2s ease;
+}
+
+/* Botón Verde Menta Principal */
+.btn-verde-menta {
+    background-color: #1CE3B0;
+    color: #121717;
+}
+
+.btn-verde-menta:hover,
+.btn-verde-menta:focus {
+    background-color: #16cfa0;
+    color: #121717;
+}
+
+/* Botón Blanco / Secundario Grisáceo */
+.btn-blanco {
+    background-color: #F0F5F2;
+    color: #121717;
+}
+
+.btn-blanco:hover,
+.btn-blanco:focus {
+    background-color: #DCE5E0;
+    border-color: #C8D4CE;
+}
+
+/* Botón Omitir Plano */
+.btn-omitir {
+    background-color: #F1F2F4 !important;
+    color: #1A1C1E !important;
+    border: none;
+}
+
+/* Cajas de texto estándar e inputs estilo Figma */
+.caja-texto {
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    font-size: 0.9rem;
+}
+
+.caja-texto:focus {
+    border-color: #00cccc;
+    box-shadow: 0 0 0 0.25rem rgba(0, 204, 204, 0.15);
+}
+
+.label-figma {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1A1C1E;
+    text-align: left;
+    display: block;
+}
+
+.caja-texto-figma {
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    border: 1px solid #E1E2E4 !important;
+    font-size: 0.95rem;
+    background-color: #FFFFFF;
+    color: #1A1C1E;
+}
+
+.caja-texto-figma::placeholder {
+    color: #92A19A !important;
+    opacity: 1;
+}
+
+/* Clases Utilitarias de Reducción */
+.py-25 {
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
+}
+
+.text-sm {
+    font-size: 0.92rem !important;
+}
+
+.text-xs {
+    font-size: 0.78rem !important;
+}
+
+
+/* ==========================================================================
+   2. PANTALLA: LOGIN & REGISTRO (AUTENTICACIÓN)
+   ========================================================================== */
+
+.style-titulo-registro {
+    color: #1A1C1E;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.style-flecha {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+
+
+/* ==========================================================================
+   3. PANTALLA: HOME DASHBOARD
+   ========================================================================== */
+
+.label-cerrar {
+    font-size: 0.85rem !important;
+    color: #1A1C1E !important;
+}
+
+.style-home-title {
+    font-size: 1.85rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.style-emma-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.style-sub-title {
+    font-size: 0.95rem;
+    color: #5C6066 !important;
+}
+
+.label-servicio {
+    color: #8A9499;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.text-btn-home {
+    font-size: 0.85rem !important;
+    padding: 6px 14px !important;
+    color: #121717 !important;
+}
+
+.img-menu-figma {
+    border-radius: 16px !important;
+    width: 100%;
+    height: 75px;
+    object-fit: cover;
+}
+
+/* Botón Flotante Invertido (FAB Chat) */
+.btn-flotante-chat {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background-color: #1CE3B0;
+    border: none;
+    z-index: 100;
+    transition: transform 0.2s ease;
+}
+
+.btn-flotante-chat:hover {
+    transform: scale(1.08);
+    background-color: #16cfa0;
+}
+
+
+/* ==========================================================================
+   4. PANTALLA: AGREGAR MEDICAMENTOS (RUEDA SELECTORA & LISTA)
+   ========================================================================== */
+
+/* Contenedor Base del Rodillo */
+.wheel-container {
+    background-color: #F8F9FA;
+    border-radius: 16px;
+    height: 140px;
+    overflow: hidden;
+    border: 1px solid #E1E2E4;
+}
+
+/* Franja Destacada Central de Selección */
+.wheel-highlight {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    right: 12px;
+    transform: translateY(-50%);
+    height: 40px;
+    background-color: #EBFBF7;
+    border-radius: 10px;
+    z-index: 1;
+    border: 1px solid rgba(28, 227, 176, 0.15);
+    pointer-events: none;
+    /* Permite arrastrar las listas a través de la capa */
+}
+
+/* Rodillos Verticales Independientes */
+.wheel-col {
+    flex: 1;
+    height: 100%;
+    overflow-y: scroll;
+    display: block !important;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+}
+
+.wheel-col::-webkit-scrollbar {
+    display: none;
+}
+
+/* Opciones de la ruleta */
+.wheel-item {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    color: #8A9499;
+    font-weight: 500;
+    scroll-snap-align: center;
+    transition: color 0.2s ease, font-weight 0.2s ease, font-size 0.2s ease;
+}
+
+/* Rellenos superiores e inferiores para cuadrar extremos */
+.wheel-space {
+    height: 50px;
+    pointer-events: none;
+}
+
+/* Estado Activo: Elemento imantado en el centro */
+.wheel-item.selected {
+    color: #121717 !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+}
+
+/* Estructuración de Filas para Medicamentos Guardados */
+.item-med {
+    border-bottom: 1px solid #F8F9FA;
+}
+
+.container-btn-fijo {
+    border-top: 1px solid #F8F9FA;
+}
+
+/* ==========================================================================
+   5. PANTALLA: FARMACIAS CERCANAS Y MAPA (DETALLES FIGMA)
+   ========================================================================== */
+
+/* Contenedor principal del input buscador */
+.buscador-sobrepuesto-container {
+    position: absolute;
+    top: 20px;
+    left: 16px;
+    right: 16px;
+    padding-left: 48px;
+    /* Deja espacio exacto para que respire el botón de atrás */
+    z-index: 30;
+}
+
+/* El input reducido a la medida exacta de Figma */
+.input-mapa-figma {
+    background-color: #FFFFFF !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-radius: 12px !important;
+    padding: 10px 16px 10px 42px !important;
+    /* Espacio izquierdo extra para la lupa */
+    font-size: 0.88rem;
+    color: #1A1C1E;
+    height: 44px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.input-mapa-figma::placeholder {
+    color: #92A19A !important;
+}
+
+/* Posicionamiento de la lupa dentro del input */
+.icono-lupa-inside {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    z-index: 35;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+/* Botón flotante para regresar */
+.btn-flotante-atras {
+    position: absolute;
+    top: 20px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    color: #1A1C1E;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    z-index: 40;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- BLOQUE DE CONTROLES FLOTANTES LATERALES --- */
+
+.controles-mapa-costado {
+    position: absolute;
+    right: 16px;
+    bottom: 24px;
+    /* Flotan justo por encima de la tarjeta inferior */
+    z-index: 35;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Caja unificada para el control de Zoom (+ y -) */
+.grupo-zoom-mapa {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 38px;
+}
+
+/* Botones individuales del Zoom */
+.btn-control-accion {
+    width: 38px;
+    height: 38px;
+    background: #FFFFFF;
+    border: none;
+    color: #1A1C1E;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s;
+}
+
+.btn-control-accion:active {
+    background-color: #F1F2F4;
+}
+
+/* Botón de brújula / ubicación */
+.btn-control-ubicacion {
+    width: 38px;
+    height: 38px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s;
+}
+
+.btn-control-ubicacion:active {
+    background-color: #F1F2F4;
+}
+
+/* --- BOTONES DE FILTRO ESTILO PÍLDORA INTERACTIVA --- */
+
+.btn-filtro-badge {
+    flex: 1;
+    /* Hace que ambos botones tengan exactamente el mismo ancho simétrico */
+    max-width: 160px;
+    padding: 8px 16px !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    border-radius: 20px !important;
+    border: 1px solid #E2E8F0 !important;
+    /* Borde sutil gris para notar que es seleccionable */
+    background-color: #F8FAFC !important;
+    /* Fondo base claro */
+    color: #64748B !important;
+    /* Texto gris cuando está inactivo */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s ease-in-out;
+    text-align: center;
+}
+
+/* Efecto Hover sutil para cuando el usuario pasa el dedo o el mouse */
+.btn-filtro-badge:hover {
+    border-color: #CBD5E1 !important;
+    background-color: #F1F5F9 !important;
+    color: #334155 !important;
+}
+
+/* ESTADO ACTIVO: Cambia al verde menta oficial de MedicApp con máxima prioridad */
+.btn-filtro-badge.active-filter {
+    background-color: #1CE3B0 !important;
+    /* Nuestro verde menta */
+    color: #121717 !important;
+    /* Texto oscuro de alta legibilidad */
+    border-color: #1CE3B0 !important;
+    /* El borde se fusiona con el fondo */
+    box-shadow: 0 4px 12px rgba(28, 227, 176, 0.25) !important;
+    /* Pequeño brillo verde abajo */
+}
+
+/* ==========================================================================
+   6. PANTALLA: HISTORIAL DE SOLICITUDES
+   ========================================================================== */
+
+/* Bloque contenedor de cada tarjeta de historial */
+.card-historial-item {
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+/* Contenedor gris redondeado para los iconos de estado */
+.icon-estado-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background-color: #F1F2F4; /* Gris claro idéntico a Figma */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajustes finos de tipografía para los bloques de texto de la bitácora */
+.text-fecha-historial {
+    color: #1A1C1E;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.text-estado-sub {
+    font-size: 0.82rem;
+    color: #8A9499 !important;
+}
+
+.text-medicamentos-lista {
+    font-size: 0.85rem;
+    color: #64748B !important;
+    font-weight: 500;
+}
+
+/* Limita la visualización inicial de la caja para que no colapse la pantalla */
+#wrapper-scroll-historial {
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    transition: all 0.4s ease-in-out;
+}
+
+.card-historial-item {
+    border-bottom: 1px solid #F1F2F4;
+}
+
+.card-historial-item:last-child {
+    border-bottom: none; /* Quita la línea al último elemento */
+}
+
+/* ==========================================================================
+   7. PANTALLA: FEEDBACK / CALIFICACIÓN DE EXPERIENCIA
+   ========================================================================== */
+
+/* Botones selectores Sí y No */
+.btn-chip-sino {
+    padding: 6px 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    background-color: #F8FAFC;
+    color: #475569;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Estado cuando se selecciona un chip Sí/No (Verde Menta Corporativo) */
+.btn-chip-sino.selected-chip {
+    background-color: #1CE3B0 !important;
+    color: #121717 !important;
+    border-color: #1CE3B0 !important;
+    box-shadow: 0 2px 6px rgba(28, 227, 176, 0.2);
+}
+
+/* Estrellas de Calificación */
+.sistema-estrellas {
+    font-size: 1.8rem;
+    user-select: none;
+}
+
+.estrella-voto {
+    cursor: pointer;
+    color: #E2E8F0; /* Gris apagado por defecto */
+    transition: color 0.15s ease-in-out;
+}
+
+/* Clase inyectada por JS para encender las estrellas */
+.estrella-voto.active-star {
+    color: #FFC107 !important; /* Amarillo Dorado estándar de Feedback */
+}
+
+/* Caja de Texto Adicional */
+.caja-comentario-figma {
+    background-color: #F1F2F4 !important; /* Color gris suave de los inputs de tu Figma */
+    border: 1px solid transparent !important;
+    border-radius: 14px !important;
+    padding: 12px 16px !important;
+    font-size: 0.9rem;
+    color: #1A1C1E;
+    resize: none;
+    box-shadow: none !important;
+    transition: border-color 0.2s;
+}
+
+.caja-comentario-figma:focus {
+    border-color: #1CE3B0 !important;
+    background-color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   8. PANTALLA: TELÉFONO / INTERFAZ DE LLAMADA
+   ========================================================================== */
+
+/* Avatar superior del médico */
+.avatar-telefono-medico {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #F1F2F4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Área donde se imprime el número */
+.display-numero-telefono {
+    font-size: 1.8rem;
+    color: #1A1C1E;
+    letter-spacing: 1px;
+    min-height: 40px;
+}
+
+/* Rejilla CSS Grid para organizar las teclas en 3 columnas perfectas */
+.teclado-numerico-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    max-width: 260px;
+    width: 100%;
+}
+
+/* Botones individuales de cada número */
+.btn-tecla-num {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    background-color: #F8FAFC;
+    color: #1A1C1E;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.btn-tecla-num:active {
+    background-color: #E2E8F0;
+    transform: scale(0.95);
+}
+
+/* Botones inferiores secundarios (Mute / Speaker) */
+.btn-utilidad-telefono {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.btn-utilidad-telefono.active-util {
+    transform: scale(1.1);
+    filter: drop-shadow(0px 2px 4px rgba(28, 227, 176, 0.3));
+}
+
+/* Gran botón circular para colgar la llamada */
+.btn-colgar-llamada {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #FF4A4A; /* Rojo de alerta suave */
+    color: #FFFFFF;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-colgar-llamada:hover {
+    background-color: #E03E3E;
+}
+
+.btn-colgar-llamada:active {
+    transform: scale(0.92);
+}

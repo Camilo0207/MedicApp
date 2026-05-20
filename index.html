@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedicApp - Prototipo</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+  <body>
+    <div
+      class="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center p-0 p-sm-3"
+    >
+      <div
+        class="col-12 col-md-5 col-lg-4 bg-white shadow-lg min-vh-100 position-relative contenedor-movil"
+      >
+        <section
+          id="pantalla-login"
+          class="d-flex flex-column justify-content-center h-100"
+          style="
+            background-image: url(&quot;img/Imagen de Fondo.png&quot;);
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 2.5rem 2rem;
+          "
+        >
+          <div class="text-center mt-5">
+            <h1 class="fw-bold h1">MedicApp</h1>
+            <img
+              src="img/logo.png"
+              alt="MedicApp Logo"
+              class="mb-3"
+              style="width: 200px; height: auto"
+            />
+            <p class="fw-bold h2">Login</p>
+          </div>
+
+          <div>
+            <form onsubmit="ejecutarLogin(event)">
+              <div
+                id="login-error-alert"
+                class="alert alert-danger text-xs py-2 px-3 rounded-3 d-none mb-3 text-start"
+                role="alert"
+              ></div>
+
+              <div class="mb-3 text-start">
+                <input
+                  type="email"
+                  class="form-control caja-texto"
+                  id="login-correo"
+                  placeholder="ejemplo@correo.com"
+                  required
+                />
+              </div>
+
+              <div class="mb-4 text-start">
+                <input
+                  type="password"
+                  class="form-control caja-texto"
+                  id="login-pass"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <p
+                class="text-muted text-xs text-center cursor-pointer mb-3"
+                onclick="
+                  alert(
+                    'Funcionalidad ilustrativa: Enlace para recuperación enviado a su correo.',
+                  )
+                "
+              >
+                ¿Olvidó su contraseña?
+              </p>
+
+              <button
+                type="submit"
+                class="btn btn-verde-menta w-100 fw-bold py-2 shadow-sm mb-2"
+              >
+                Login
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-blanco w-100 fw-bold py-2 shadow-sm"
+                onclick="cambiarPantalla('pantalla-registro')"
+              >
+                Crear Cuenta
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <section
+          id="pantalla-registro"
+          class="d-flex flex-column justify-content-between h-100 p-4 bg-white d-none"
+        >
+          <div class="d-flex align-items-center pt-2 mb-4 position-relative">
+            <button
+              type="button"
+              class="btn btn-link text-dark p-0 position-absolute start-0 style-flecha"
+              onclick="cambiarPantalla('pantalla-login')"
+            >
+              ←
+            </button>
+            <h2
+              class="fw-bold h4 w-100 text-center mb-0 style-titulo-registro text-dark"
+            >
+              Crear Cuenta
+            </h2>
+          </div>
+
+          <div
+            class="flex-grow-1 d-flex flex-column justify-content-center my-2"
+          >
+            <form onsubmit="ejecutarRegistro(event)">
+              <div
+                id="registro-alert"
+                class="alert d-none text-xs py-2 px-3 rounded-3 mb-3 text-start"
+                role="alert"
+              ></div>
+
+              <div class="mb-3 text-start">
+                <label
+                  class="form-label label-figma mb-1 text-dark fw-semibold text-sm"
+                  >Nombre Completo</label
+                >
+                <input
+                  type="text"
+                  class="form-control caja-texto-figma"
+                  id="reg-nombre"
+                  placeholder="Ingrese nombre"
+                  required
+                />
+              </div>
+
+              <div class="mb-3 text-start">
+                <label
+                  class="form-label label-figma mb-1 text-dark fw-semibold text-sm"
+                  >Correo</label
+                >
+                <input
+                  type="email"
+                  class="form-control caja-texto-figma"
+                  id="reg-correo"
+                  placeholder="Ingrese su correo"
+                  required
+                />
+              </div>
+
+              <div class="mb-3 text-start">
+                <label
+                  class="form-label label-figma mb-1 text-dark fw-semibold text-sm"
+                  >Contraseña</label
+                >
+                <input
+                  type="password"
+                  class="form-control caja-texto-figma"
+                  id="reg-pass"
+                  placeholder="Ingrese contraseña"
+                  minlength="6"
+                  required
+                />
+              </div>
+
+              <div class="mb-4 text-start">
+                <label
+                  class="form-label label-figma mb-1 text-dark fw-semibold text-sm"
+                  >Confirmacion contraseña</label
+                >
+                <input
+                  type="password"
+                  class="form-control caja-texto-figma"
+                  id="reg-pass-confirm"
+                  placeholder="Confirme contraseña"
+                  required
+                />
+              </div>
+
+              <div class="pt-2 mb-2">
+                <button
+                  type="submit"
+                  class="btn btn-verde-menta w-100 fw-bold py-2.5 rounded-pill shadow-sm"
+                >
+                  Crear cuenta
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="pb-2"></div>
+        </section>
+
+        <section
+          id="pantalla-home"
+          class="d-flex flex-column h-100 p-4 bg-white position-relative d-none"
+        >
+          <div
+            class="d-flex justify-content-between align-items-center pt-2 mb-3"
+          >
+            <div
+              class="rounded-circle shadow-sm overflow-hidden"
+              style="width: 40px; height: 40px; background-color: #e9ecef"
+            >
+              <img
+                src="img/perfil.png"
+                alt="Perfil"
+                class="w-100 h-100 object-fit-cover"
+                onerror="this.src = 'https://placehold.co/100x100?text=👤'"
+              />
+            </div>
+            <button
+              type="button"
+              class="btn btn-link p-0 text-decoration-none fw-semibold text-dark label-cerrar"
+              onclick="cambiarPantalla('pantalla-login')"
+            >
+              Cerrar sesion
+            </button>
+          </div>
+
+          <div class="text-start mb-4">
+            <h2 class="fw-bold text-dark mb-2 style-home-title">Home</h2>
+            <h3 class="fw-bold text-dark mb-2 style-emma-title">
+              Hola, <span id="home-saludo-usuario">Emma</span>!
+            </h3>
+            <p class="text-muted style-sub-title">
+              ¿Como podemos ayudarte hoy?
+            </p>
+          </div>
+
+          <div class="flex-grow-1 overflow-y-auto pe-1 structure-menu">
+            <div class="row align-items-center mb-4">
+              <div class="col-7 text-start">
+                <span class="label-servicio d-block mb-2"
+                  >Solicitar Medicamentos</span
+                >
+                <button
+                  class="btn btn-verde-menta rounded-pill text-btn-home fw-semibold px-3 py-2 shadow-sm"
+                  onclick="cambiarPantalla('pantalla-agregar-med')"
+                >
+                  Solicitar Ahora <span class="ms-1">→</span>
+                </button>
+              </div>
+              <div class="col-5">
+                <img
+                  src="img/home-solicitar.png"
+                  alt="Solicitar"
+                  class="img-fluid img-menu-figma shadow-sm"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/120x70/555/fff?text=Medicapp'
+                  "
+                />
+              </div>
+            </div>
+
+            <div class="row align-items-center mb-4">
+              <div class="col-7 text-start">
+                <span class="label-servicio d-block mb-2"
+                  >Historial de Solicitudes</span
+                >
+                <button
+                  class="btn btn-verde-menta rounded-pill text-btn-home fw-semibold px-3 py-2 shadow-sm"
+                  onclick="cambiarPantalla('pantalla-historial')"
+                >
+                  Ver Ahora <span class="ms-1">→</span>
+                </button>
+              </div>
+              <div class="col-5">
+                <img
+                  src="img/home-historial.png"
+                  alt="Historial"
+                  class="img-fluid img-menu-figma shadow-sm"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/120x70/654/fff?text=Historial'
+                  "
+                />
+              </div>
+            </div>
+
+            <div class="row align-items-center mb-4">
+              <div class="col-7 text-start">
+                <span class="label-servicio d-block mb-2"
+                  >Farmacias Cercanas</span
+                >
+                <button
+                  class="btn btn-verde-menta rounded-pill text-btn-home fw-semibold px-3 py-2 shadow-sm"
+                  onclick="cambiarPantalla('pantalla-farmacias')"
+                >
+                  Encontrar Ahora <span class="ms-1">→</span>
+                </button>
+              </div>
+              <div class="col-5">
+                <img
+                  src="img/home-farmacias.png"
+                  alt="Farmacias"
+                  class="img-fluid img-menu-figma shadow-sm"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/120x70/765/fff?text=Farmacias'
+                  "
+                />
+              </div>
+            </div>
+
+            <div class="row align-items-center mb-4">
+              <div class="col-7 text-start">
+                <span class="label-servicio d-block mb-2"
+                  >Contacto y Soporte</span
+                >
+                <button
+                  class="btn btn-verde-menta rounded-pill text-btn-home fw-semibold px-3 py-2 shadow-sm"
+                  onclick="cambiarPantalla('pantalla-telefono')"
+                >
+                  Llamar Ahora <span class="ms-1">→</span>
+                </button>
+              </div>
+              <div class="col-5">
+                <img
+                  src="img/home-soporte.png"
+                  alt="Soporte"
+                  class="img-fluid img-menu-figma shadow-sm"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/120x70/333/fff?text=Soporte'
+                  "
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="btn-flotante-chat shadow d-flex align-items-center justify-content-center"
+            onclick="cambiarPantalla('pantalla-feedback')"
+          >
+            <span style="font-size: 1.3rem; transform: scaleX(-1)">💬</span>
+          </button>
+        </section>
+
+        <section
+          id="pantalla-agregar-med"
+          class="d-flex flex-column h-100 p-4 bg-white position-relative d-none"
+        >
+          <div class="d-flex align-items-center pt-2 mb-4 position-relative">
+            <button
+              type="button"
+              class="btn btn-link text-dark p-0 position-absolute start-0 style-flecha"
+              onclick="cambiarPantalla('pantalla-home')"
+            >
+              ←
+            </button>
+            <h2 class="fw-bold h5 w-100 text-center mb-0 text-dark">
+              Agregar Medicamentos
+            </h2>
+          </div>
+
+          <div class="flex-grow-1 overflow-y-auto pe-1 structure-menu">
+            <div class="mb-4 text-start">
+              <label class="form-label label-figma mb-1">Medication</label>
+              <input
+                type="text"
+                class="form-control caja-texto-figma"
+                id="med-nombre"
+                placeholder="Ingrese Nombre Del Medicamento"
+              />
+            </div>
+
+            <div class="position-relative wheel-container mb-4">
+              <div class="wheel-highlight"></div>
+
+              <div class="d-flex flex-row h-100 position-relative z-2">
+                <div class="wheel-col" id="col-cantidad">
+                  <div class="wheel-space"></div>
+                  <div class="wheel-item" data-val="1">1</div>
+                  <div class="wheel-item" data-val="2">2</div>
+                  <div class="wheel-item" data-val="3">3</div>
+                  <div class="wheel-item" data-val="4">4</div>
+                  <div class="wheel-item" data-val="5">5</div>
+                  <div class="wheel-space"></div>
+                </div>
+
+                <div class="wheel-col" id="col-tipo">
+                  <div class="wheel-space"></div>
+                  <div class="wheel-item" data-val="pildora">pildora</div>
+                  <div class="wheel-item" data-val="dosis">dosis</div>
+                  <div class="wheel-item" data-val="inalacion">inalacion</div>
+                  <div class="wheel-item" data-val="capsula">cápsula</div>
+                  <div class="wheel-space"></div>
+                </div>
+
+                <div class="wheel-col" id="col-frecuencia">
+                  <div class="wheel-space"></div>
+                  <div class="wheel-item" data-val="diario">diario</div>
+                  <div class="wheel-item" data-val="semanal">semanal</div>
+                  <div class="wheel-item" data-val="mensual">mensual</div>
+                  <div class="wheel-space"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+              <div class="col-6">
+                <button
+                  type="button"
+                  class="btn btn-verde-menta w-100 fw-bold py-2 rounded-pill shadow-sm text-sm"
+                  onclick="agregarMedicamentoDinamico()"
+                >
+                  Agregar A Lista
+                </button>
+              </div>
+              <div class="col-6">
+                <button
+                  type="button"
+                  class="btn btn-omitir w-100 fw-bold py-2 rounded-pill shadow-sm text-sm"
+                  onclick="limpiarFormularioMed()"
+                >
+                  Omitir
+                </button>
+              </div>
+            </div>
+
+            <div id="lista-medicamentos-dinamica" class="mb-5">
+              <div
+                class="d-flex align-items-center justify-content-between py-2 mb-2 item-med"
+              >
+                <div class="d-flex align-items-center">
+                  <img
+                    src="img/pills-white.png"
+                    alt="pill"
+                    class="me-3"
+                    style="width: 36px; height: auto"
+                    onerror="this.src = 'https://placehold.co/36x36?text=💊'"
+                  />
+                  <div class="text-start">
+                    <p class="mb-0 fw-bold text-dark text-sm">Acetaminofen</p>
+                    <small class="text-muted text-xs"
+                      >20mg, 30 pildoras, diario</small
+                    >
+                  </div>
+                </div>
+                <button
+                  class="btn btn-link text-dark fw-semibold text-sm p-0 text-decoration-none"
+                >
+                  Editar
+                </button>
+              </div>
+
+              <div
+                class="d-flex align-items-center justify-content-between py-2 mb-2 item-med"
+              >
+                <div class="d-flex align-items-center">
+                  <img
+                    src="img/pills-color.png"
+                    alt="pill"
+                    class="me-3"
+                    style="width: 36px; height: auto"
+                    onerror="this.src = 'https://placehold.co/36x36?text=💊'"
+                  />
+                  <div class="text-start">
+                    <p class="mb-0 fw-bold text-dark text-sm">Metformina</p>
+                    <small class="text-muted text-xs"
+                      >500mg, 60 pildoras, diario</small
+                    >
+                  </div>
+                </div>
+                <button
+                  class="btn btn-link text-dark fw-semibold text-sm p-0 text-decoration-none"
+                >
+                  Editar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 bg-white container-btn-fijo">
+            <button
+              type="button"
+              class="btn btn-verde-menta w-100 fw-bold py-25 rounded-pill shadow-sm"
+              onclick="alert('¡Solicitud Enviada con Éxito!')"
+            >
+              Enviar Solicitud
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="pantalla-farmacias"
+          class="d-flex flex-column h-100 bg-white position-relative d-none"
+        >
+          <div
+            class="flex-grow-1 position-relative mapa-contenedor"
+            style="
+              min-height: 280px;
+              background-image: url(&quot;img/mapa-bogota.png&quot;);
+              background-size: cover;
+              background-position: center;
+            "
+          >
+            <button
+              type="button"
+              class="btn btn-flotante-atras shadow-sm"
+              onclick="cambiarPantalla('pantalla-home')"
+            >
+              ←
+            </button>
+
+            <div class="buscador-sobrepuesto-container">
+              <div class="position-relative w-100">
+                <span class="icono-lupa-inside">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="#92A19A"
+                    class="bi bi-search"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                    />
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  id="buscar-farmacia"
+                  class="form-control input-mapa-figma"
+                  placeholder="Buscar farmacias o medicamentos..."
+                  oninput="filtrarFarmacias()"
+                />
+              </div>
+            </div>
+
+            <div class="controles-mapa-costado">
+              <div class="grupo-zoom-mapa shadow-sm mb-2">
+                <button
+                  type="button"
+                  class="btn-control-accion border-bottom"
+                  onclick="alert('Zoom In / Acercar Mapa')"
+                >
+                  +
+                </button>
+                <button
+                  type="button"
+                  class="btn-control-accion"
+                  onclick="alert('Zoom Out / Alejar Mapa')"
+                >
+                  −
+                </button>
+              </div>
+
+              <button
+                type="button"
+                class="btn-control-ubicacion shadow-sm"
+                onclick="alert('Centrando en tu ubicación actual...')"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="#1A1C1E"
+                  class="bi bi-geo"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 4m3 8.44a1 1 0 1 1 2 0v1.75a1 1 0 1 1-2 0z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="bg-white p-3 border-top rounded-top-4 shadow-lg d-flex flex-column"
+            style="max-height: 50%; min-height: 380px; z-index: 20"
+          >
+            <h3 class="text-center fw-bold h6 text-secondary mb-3">
+              Farmacias Cercanas
+            </h3>
+
+            <div
+              id="lista-farmacias-dinamica"
+              class="flex-grow-1 overflow-y-auto structure-menu pe-1 mb-3"
+            ></div>
+
+            <div class="border-top pt-3 mt-auto">
+              <p class="text-center text-xs text-muted mb-2 fw-bold">
+                Filtrar Por
+              </p>
+              <div class="d-flex justify-content-center gap-2 px-2">
+                <button
+                  type="button"
+                  id="btn-filtro-distancia"
+                  class="btn btn-filtro-badge active-filter"
+                  onclick="alternarFiltro('distancia')"
+                >
+                  Distancia
+                </button>
+                <button
+                  type="button"
+                  id="btn-filtro-medicamento"
+                  class="btn btn-filtro-badge"
+                  onclick="alternarFiltro('medicamento')"
+                >
+                  Medicamento
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="pantalla-historial"
+          class="d-flex flex-column h-100 bg-white p-4 position-relative d-none"
+        >
+          <div class="d-flex align-items-center pt-2 mb-3 position-relative">
+            <button
+              type="button"
+              class="btn btn-link text-dark p-0 position-absolute start-0 style-flecha"
+              onclick="cambiarPantalla('pantalla-home')"
+            >
+              ←
+            </button>
+            <h2 class="fw-bold h5 w-100 text-center mb-0 text-dark">
+              Historia de Solicitudes
+            </h2>
+          </div>
+
+          <div
+            id="wrapper-scroll-historial"
+            class="flex-grow-1 overflow-y-auto pe-1 structure-menu mb-3"
+            style="max-height: 70%"
+          >
+            <div id="lista-historial-dinamica"></div>
+          </div>
+
+          <div
+            class="pt-3 border-top bg-white d-flex justify-content-between gap-3 zone-botones-historial"
+          >
+            <button
+              type="button"
+              class="btn btn-verde-menta w-50 fw-bold py-2 rounded-3 text-sm shadow-sm"
+              onclick="simularDescargaPDF()"
+            >
+              Descargar PDF
+            </button>
+            <button
+              type="button"
+              id="btn-historial-ver-mas"
+              class="btn btn-blanco w-50 fw-bold py-2 rounded-3 text-sm"
+              onclick="cargarMasHistorial()"
+            >
+              Ver Más
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="pantalla-feedback"
+          class="d-flex flex-column h-100 bg-white p-4 position-relative d-none"
+        >
+          <div class="d-flex align-items-center pt-2 mb-4 position-relative">
+            <button
+              type="button"
+              class="btn btn-link text-dark p-0 position-absolute start-0 style-flecha"
+              onclick="cambiarPantalla('pantalla-home')"
+            >
+              ←
+            </button>
+          </div>
+
+          <div class="flex-grow-1 overflow-y-auto structure-menu pe-1">
+            <h2 class="fw-bold h3 text-dark text-start mb-2">
+              ¿Como fue tu experiencia?
+            </h2>
+            <p class="text-muted text-sm text-start mb-4">
+              Nos encantaría recibir tus comentarios sobre cómo podemos mejorar
+              nuestros servicios.
+            </p>
+
+            <div class="mb-4 text-start">
+              <label class="fw-bold text-dark text-sm d-block mb-2"
+                >¿Los medicamentos fueron entregados a tiempo?</label
+              >
+              <div class="d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-chip-sino"
+                  onclick="seleccionarSino(this, 'entrega', 'si')"
+                >
+                  Sí
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-chip-sino"
+                  onclick="seleccionarSino(this, 'entrega', 'no')"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-4 text-start">
+              <label class="fw-bold text-dark text-sm d-block mb-2"
+                >¿Los medicamentos son faciles de usar?</label
+              >
+              <div class="d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-chip-sino"
+                  onclick="seleccionarSino(this, 'facilidad', 'si')"
+                >
+                  Sí
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-chip-sino"
+                  onclick="seleccionarSino(this, 'facilidad', 'no')"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-4 text-start">
+              <label class="fw-bold text-dark text-sm d-block mb-1"
+                >En general, ¿cómo calificaría el servicio?</label
+              >
+              <small class="text-muted text-xs d-block mb-2"
+                >1-5 Estrellas</small
+              >
+
+              <div class="d-flex gap-1 sistema-estrellas" id="modulo-estrellas">
+                <span class="estrella-voto" onclick="calificarEstrellas(1)"
+                  >★</span
+                >
+                <span class="estrella-voto" onclick="calificarEstrellas(2)"
+                  >★</span
+                >
+                <span class="estrella-voto" onclick="calificarEstrellas(3)"
+                  >★</span
+                >
+                <span class="estrella-voto" onclick="calificarEstrellas(4)"
+                  >★</span
+                >
+                <span class="estrella-voto" onclick="calificarEstrellas(5)"
+                  >★</span
+                >
+              </div>
+            </div>
+
+            <div class="mb-4 text-start">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2"
+              >
+                <label
+                  for="feedback-comentarios"
+                  class="fw-bold text-dark text-sm mb-0"
+                  >Comentarios adicionales</label
+                >
+                <span id="contador-caracteres" class="text-muted text-xs"
+                  >0 / 250</span
+                >
+              </div>
+              <textarea
+                id="feedback-comentarios"
+                class="form-control caja-comentario-figma"
+                rows="4"
+                placeholder="Escribe tu opinión aquí..."
+                maxlength="250"
+                oninput="actualizarContador()"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="pt-3 border-top bg-white zone-header">
+            <button
+              type="button"
+              class="btn btn-verde-menta w-100 fw-bold py-2.5 rounded-3 d-flex align-items-center justify-content-center gap-2 shadow-sm"
+              onclick="enviarFeedback()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-send"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"
+                />
+              </svg>
+              Enviar comentarios
+            </button>
+            <p class="text-center text-xs text-muted mt-3 mb-0">
+              Gracias por tomarte el tiempo para brindar tus comentarios.
+            </p>
+          </div>
+        </section>
+
+        <section
+          id="pantalla-telefono"
+          class="d-flex flex-column h-100 bg-white p-4 position-relative d-none"
+        >
+          <div class="d-flex align-items-center pt-2 mb-3">
+            <button
+              type="button"
+              class="btn btn-link text-dark p-0 style-flecha"
+              onclick="colgarYRegresar()"
+            >
+              ←
+            </button>
+          </div>
+
+          <div class="text-center my-3 container-info-llamada">
+            <div class="avatar-telefono-medico mx-auto mb-3 shadow-sm">
+              <span class="fs-3">🩺</span>
+            </div>
+            <h2 class="fw-bold h5 text-dark mb-1">
+              Central de Atención Médica
+            </h2>
+            <p
+              id="estado-llamada-texto"
+              class="text-xs text-primary fw-semibold tracking-wide mb-3"
+            >
+              LÍNEA DE SOPORTE
+            </p>
+
+            <div
+              class="display-numero-telefono fw-bold"
+              id="pantalla-numero-digitado"
+            >
+              01-8000-MEDIC
+            </div>
+          </div>
+
+          <div
+            class="flex-grow-1 d-flex align-items-center justify-content-center my-2"
+          >
+            <div class="teclado-numerico-grid">
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('1')"
+              >
+                1
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('2')"
+              >
+                2
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('3')"
+              >
+                3
+              </button>
+
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('4')"
+              >
+                4
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('5')"
+              >
+                5
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('6')"
+              >
+                6
+              </button>
+
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('7')"
+              >
+                7
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('8')"
+              >
+                8
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('9')"
+              >
+                9
+              </button>
+
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('*')"
+              >
+                *
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('0')"
+              >
+                0
+              </button>
+              <button
+                type="button"
+                class="btn-tecla-num"
+                onclick="presionarTecla('#')"
+              >
+                #
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-auto pt-3">
+            <div class="d-flex justify-content-center gap-5 mb-4">
+              <button
+                type="button"
+                id="btn-util-mute"
+                class="btn-utilidad-telefono"
+                onclick="alternarUtilidad('mute')"
+              >
+                🎤
+                <small class="d-block mt-1 text-xs fw-semibold text-muted"
+                  >Silenciar</small
+                >
+              </button>
+              <button
+                type="button"
+                id="btn-util-altavoz"
+                class="btn-utilidad-telefono"
+                onclick="alternarUtilidad('altavoz')"
+              >
+                🔊
+                <small class="d-block mt-1 text-xs fw-semibold text-muted"
+                  >Altavoz</small
+                >
+              </button>
+            </div>
+
+            <div class="d-flex justify-content-center mb-3">
+              <button
+                type="button"
+                class="btn-colgar-llamada shadow-lg"
+                onclick="colgarYRegresar()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  class="bi bi-telephone-fill"
+                  viewBox="0 0 16 16"
+                  style="transform: rotate(135deg)"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
