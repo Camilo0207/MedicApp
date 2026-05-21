@@ -1,3 +1,6 @@
+/* ==========================================================================
+   0. CONFIGURACIÓN INICIAL Y CONTROL DE PANTALLAS (MONITOR GLOBAL)
+   ========================================================================== */
 let usuarioLogueado = null;
 
 const BD_USUARIOS = [
@@ -5,6 +8,58 @@ const BD_USUARIOS = [
     { correo: "usuario@correo.com", pass: "password", nombreCompleto: "Carlos Gómez" }
 ];
 
+// Función base para cambiar pantallas limpiando clases 'd-none'
+function cambiarPantalla(idPantallaDestino) {
+    const pantallas = document.querySelectorAll('.contenedor-movil > section');
+    pantallas.forEach(pantalla => {
+        pantalla.classList.add('d-none');
+    });
+    
+    const pantallaDestino = document.getElementById(idPantallaDestino);
+    if (pantallaDestino) {
+        pantallaDestino.classList.remove('d-none');
+        
+        if(idPantallaDestino === 'pantalla-agregar-med') {
+            const columnas = document.querySelectorAll('.wheel-col');
+            columnas.forEach(col => actualizarSeleccionRueda(col));
+        }
+    }
+}
+
+// Interceptor global para inicializar pantallas al cargar la App
+document.addEventListener("DOMContentLoaded", () => {
+    // Forzamos a que la aplicación arranque SIEMPRE en la nueva pantalla de bienvenida
+    cambiarPantalla('pantalla-bienvenida');
+
+    // Configuración de los eventos de scroll para las ruedas (reutilizado)
+    const columnas = document.querySelectorAll('.wheel-col');
+    columnas.forEach(col => {
+        col.addEventListener('scroll', () => {
+            actualizarSeleccionRueda(col);
+        });
+    });
+});
+
+/**
+ * Rellena automáticamente las credenciales de Emma e inicia sesión de inmediato
+ */
+function cargarCredencialesPrueba() {
+    // Cambiamos a la pantalla de login primero
+    cambiarPantalla('pantalla-login');
+    
+    // Rellenamos los inputs correspondientes
+    document.getElementById('login-correo').value = "test@medicapp.com";
+    document.getElementById('login-pass').value = "123456";
+    
+    // Creamos un evento simulado para ejecutar la validación del login de forma nativa
+    const eventoSimulado = { preventDefault: () => {} };
+    ejecutarLogin(eventoSimulado);
+}
+
+
+/* ==========================================================================
+   1. MÓDULO: AUTENTICACIÓN (LOGIN & REGISTRO)
+   ========================================================================== */
 function ejecutarLogin(event) {
     event.preventDefault(); 
     
@@ -12,7 +67,7 @@ function ejecutarLogin(event) {
     const passInput = document.getElementById('login-pass').value;
     const contenedorError = document.getElementById('login-error-alert');
 
-    contenedorError.classList.add('d-none');
+    if (contenedorError) contenedorError.classList.add('d-none');
 
     const usuarioValido = BD_USUARIOS.find(user => user.correo === correoInput && user.pass === passInput);
 
@@ -20,14 +75,21 @@ function ejecutarLogin(event) {
         usuarioLogueado = usuarioValido;
 
         const nombreAMostrar = usuarioLogueado.nombreCompleto || "Invitado";
-        document.getElementById('home-saludo-usuario').innerText = nombreAMostrar;
+        
+        // Verificación de existencia del nodo para evitar excepciones JS
+        const nodoSaludo = document.getElementById('home-saludo-usuario');
+        if (nodoSaludo) nodoSaludo.innerText = nombreAMostrar;
 
         document.getElementById('login-correo').value = "";
         document.getElementById('login-pass').value = "";
         cambiarPantalla('pantalla-home');
     } else {
-        contenedorError.innerText = "❌ El correo electrónico o la contraseña son incorrectos.";
-        contenedorError.classList.remove('d-none');
+        if (contenedorError) {
+            contenedorError.innerText = "❌ El correo electrónico o la contraseña son incorrectos.";
+            contenedorError.classList.remove('d-none');
+        } else {
+            alert("❌ El correo electrónico o la contraseña son incorrectos.");
+        }
     }
 }
 
@@ -75,33 +137,10 @@ function ejecutarRegistro(event) {
     cambiarPantalla('pantalla-login');
 }
 
-function cambiarPantalla(idPantallaDestino) {
-    const pantallas = document.querySelectorAll('.contenedor-movil > section');
-    pantallas.forEach(pantalla => {
-        pantalla.classList.add('d-none');
-    });
-    
-    const pantallaDestino = document.getElementById(idPantallaDestino);
-    if (pantallaDestino) {
-        pantallaDestino.classList.remove('d-none');
-        
-        if(idPantallaDestino === 'pantalla-agregar-med') {
-            const columnas = document.querySelectorAll('.wheel-col');
-            columnas.forEach(col => actualizarSeleccionRueda(col));
-        }
-    }
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-    const columnas = document.querySelectorAll('.wheel-col');
-    
-    columnas.forEach(col => {
-        col.addEventListener('scroll', () => {
-            actualizarSeleccionRueda(col);
-        });
-    });
-});
-
+/* ==========================================================================
+   2. MÓDULO: MEDICAMENTOS Y RUEDAS DE SELECCIÓN (WHEEL PICKER)
+   ========================================================================== */
 function actualizarSeleccionRueda(columna) {
     const items = columna.querySelectorAll('.wheel-item');
     const containerRect = columna.getBoundingClientRect();
@@ -162,6 +201,10 @@ function limpiarFormularioMed() {
     document.getElementById('med-nombre').value = "";
 }
 
+
+/* ==========================================================================
+   3. MÓDULO: GEOLOCALIZACIÓN Y BUSCADOR DE FARMACIAS
+   ========================================================================== */
 const BD_FARMACIAS = [
     {
         id: 1,
@@ -192,11 +235,13 @@ document.addEventListener("DOMContentLoaded", () => {
     renderizarFarmacias(BD_FARMACIAS);
 });
 
+// Extensión decoradora del flujo para resetear filtros en la pantalla de farmacias
 const cambiarPantallaOriginal = cambiarPantalla; 
 cambiarPantalla = function(idPantallaDestino) {
     cambiarPantallaOriginal(idPantallaDestino);
     if(idPantallaDestino === 'pantalla-farmacias') {
-        document.getElementById('buscar-farmacia').value = "";
+        const inputBuscar = document.getElementById('buscar-farmacia');
+        if(inputBuscar) inputBuscar.value = "";
         ejecutarFiltroYBusqueda();
     }
 }
@@ -243,15 +288,11 @@ function alternarFiltro(tipoFiltro) {
     const btnMedicamento = document.getElementById('btn-filtro-medicamento');
 
     if(tipoFiltro === 'distancia') {
-        btnDistancia.classList.add('active-filter');
-        btnDistancia.classList.remove('text-muted');
-        btnMedicamento.classList.remove('active-filter');
-        btnMedicamento.classList.add('text-muted');
+        if(btnDistancia) { btnDistancia.classList.add('active-filter'); btnDistancia.classList.remove('text-muted'); }
+        if(btnMedicamento) { btnMedicamento.classList.remove('active-filter'); btnMedicamento.classList.add('text-muted'); }
     } else {
-        btnMedicamento.classList.add('active-filter');
-        btnMedicamento.classList.remove('text-muted');
-        btnDistancia.classList.remove('active-filter');
-        btnDistancia.classList.add('text-muted');
+        if(btnMedicamento) { btnMedicamento.classList.add('active-filter'); btnMedicamento.classList.remove('text-muted'); }
+        if(btnDistancia) { btnDistancia.classList.remove('active-filter'); btnDistancia.classList.add('text-muted'); }
     }
 
     ejecutarFiltroYBusqueda();
@@ -262,7 +303,8 @@ function filtrarFarmacias() {
 }
 
 function ejecutarFiltroYBusqueda() {
-    const textoBusqueda = document.getElementById('buscar-farmacia').value.toLowerCase().trim();
+    const inputBuscar = document.getElementById('buscar-farmacia');
+    const textoBusqueda = inputBuscar ? inputBuscar.value.toLowerCase().trim() : "";
     
     let farmaciasFiltradas = BD_FARMACIAS.filter(farmacia => {
         const coincideNombre = farmacia.nombre.toLowerCase().includes(textoBusqueda);
@@ -283,6 +325,10 @@ function ejecutarFiltroYBusqueda() {
     renderizarFarmacias(farmaciasFiltradas);
 }
 
+
+/* ==========================================================================
+   4. MÓDULO: HISTORIAL CLÍNICO Y REPORTES PDF
+   ========================================================================== */
 const BD_HISTORIAL = [
     { fecha: "Ene 25, 2026", estado: "Recibido", tipoIcono: "check", meds: "Metformina, Acetaminofen, Loratadina" },
     { fecha: "Ene 10, 2026", estado: "Pendiente", tipoIcono: "clock", meds: "Metformina, Insulina" },
@@ -371,6 +417,10 @@ function simularDescargaPDF() {
     alert("📄 Generando reporte completo...\nSe han procesado los 10 registros de tu historial en un documento PDF.");
 }
 
+
+/* ==========================================================================
+   5. MÓDULO: SISTEMA DE SATISFACCIÓN (FEEDBACK)
+   ========================================================================== */
 let respuestasFeedback = {
     entregaATiempo: null,
     facilidadUso: null,
@@ -384,7 +434,6 @@ cambiarPantalla = function(idPantallaDestino) {
         respuestasFeedback = { entregaATiempo: null, facilidadUso: null, calificacionEstrellas: 0 };
         
         document.querySelectorAll('.btn-chip-sino').forEach(btn => btn.classList.remove('selected-chip'));
-        
         document.querySelectorAll('.estrella-voto').forEach(star => star.classList.remove('active-star'));
         
         const txtArea = document.getElementById('feedback-comentarios');
@@ -436,6 +485,10 @@ function enviarFeedback() {
     cambiarPantalla('pantalla-home'); 
 }
 
+
+/* ==========================================================================
+   6. MÓDULO: LLAMADA DE SOPORTE INTEGRADA
+   ========================================================================== */
 const NUMERO_PREDETERMINADO = "01-8000-MEDIC";
 let numeroActual = NUMERO_PREDETERMINADO;
 let estadoMute = false;
@@ -483,12 +536,12 @@ function alternarUtilidad(tipo) {
     if(tipo === 'mute') {
         estadoMute = !estadoMute;
         const btn = document.getElementById('btn-util-mute');
-        estadoMute ? btn.classList.add('active-util') : btn.classList.remove('active-util');
+        if(btn) estadoMute ? btn.classList.add('active-util') : btn.classList.remove('active-util');
     }
     if(tipo === 'altavoz') {
         estadoAltavoz = !estadoAltavoz;
         const btn = document.getElementById('btn-util-altavoz');
-        estadoAltavoz ? btn.classList.add('active-util') : btn.classList.remove('active-util');
+        if(btn) estadoAltavoz ? btn.classList.add('active-util') : btn.classList.remove('active-util');
     }
 }
 
