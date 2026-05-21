@@ -28,6 +28,19 @@ html, body {
     display: flex;
     flex-direction: column;
 }
+/* Estilos específicos para el contenedor del video explicativo */
+.video-mockup-container {
+    border-radius: 16px !important;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Borde punteado estético para la sección de credenciales de prueba */
+.border-dashed {
+    border-style: dashed !important;
+    border-color: #CBD5E1 !important;
+    background-color: #F8FAFC !important;
+}
 
 /* Vista elegante de Mockup SÓLO en pantallas de escritorio (Monitores y Laptops) */
 @media (min-width: 576px) {
