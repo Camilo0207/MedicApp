@@ -1,17 +1,10 @@
-// ==========================================================================
-// CONTROL DE AUTENTICACIÓN SIMULADA (LOGIN & REGISTRO GLOBAL)
-// ==========================================================================
-
-// Base de datos de usuarios en memoria (incluye un usuario de prueba para testear rápido)
 let usuarioLogueado = null;
 
-// Tu base de datos compartida (asegúrate de que tenga nombres base)
 const BD_USUARIOS = [
     { correo: "test@medicapp.com", pass: "123456", nombreCompleto: "Emma" },
     { correo: "usuario@correo.com", pass: "password", nombreCompleto: "Carlos Gómez" }
 ];
 
-// Función que procesa el formulario de Login de forma estricta
 function ejecutarLogin(event) {
     event.preventDefault(); 
     
@@ -21,19 +14,14 @@ function ejecutarLogin(event) {
 
     contenedorError.classList.add('d-none');
 
-    // Buscamos el usuario
     const usuarioValido = BD_USUARIOS.find(user => user.correo === correoInput && user.pass === passInput);
 
     if (usuarioValido) {
-        // 1. Guardamos los datos del usuario en nuestra sesión global
         usuarioLogueado = usuarioValido;
 
-        // 2. Antes de saltar, inyectamos su nombre en el saludo del Home
-        // Si el usuario no ingresó nombre (por si acaso), usamos 'Invitado' por defecto
         const nombreAMostrar = usuarioLogueado.nombreCompleto || "Invitado";
         document.getElementById('home-saludo-usuario').innerText = nombreAMostrar;
 
-        // Limpieza de inputs y cambio de pantalla
         document.getElementById('login-correo').value = "";
         document.getElementById('login-pass').value = "";
         cambiarPantalla('pantalla-home');
@@ -43,37 +31,27 @@ function ejecutarLogin(event) {
     }
 }
 
-// ==========================================================================
-// FUNCIÓN DE REGISTRO CON VALIDACIÓN CRUZADA
-// ==========================================================================
-
 function ejecutarRegistro(event) {
-    // Detener la recarga de página por defecto
     event.preventDefault();
 
-    // Capturar los elementos del formulario
     const nombre = document.getElementById('reg-nombre').value.trim();
     const correo = document.getElementById('reg-correo').value.trim().toLowerCase();
     const pass = document.getElementById('reg-pass').value;
     const passConfirm = document.getElementById('reg-pass-confirm').value;
     const alerta = document.getElementById('registro-alert');
 
-    // Resetear visualmente la alerta en cada intento
     alerta.className = "alert d-none text-xs py-2 px-3 rounded-3 mb-3 text-start";
     alerta.innerText = "";
 
-    // VALIDACIÓN 1: Comprobar si las contraseñas coinciden de forma estricta
     if (pass !== passConfirm) {
         alerta.innerText = "⚠️ Las contraseñas ingresadas no coinciden. Por favor, verifícalas.";
         alerta.classList.add('alert-danger');
         alerta.classList.remove('d-none');
         
-        // Foco visual de alerta en los campos
         document.getElementById('reg-pass-confirm').focus();
         return;
     }
 
-    // VALIDACIÓN 2: Comprobar si el correo ya existe registrado en MedicApp
     const usuarioDuplicado = BD_USUARIOS.find(user => user.correo === correo);
     if (usuarioDuplicado) {
         alerta.innerText = "❌ Este correo electrónico ya está registrado en nuestra base de datos.";
@@ -82,37 +60,21 @@ function ejecutarRegistro(event) {
         return;
     }
 
-    // ACCIÓN: Insertar el nuevo perfil en nuestra base de datos temporal
     BD_USUARIOS.push({
         correo: correo,
         pass: pass,
-        nombreCompleto: nombre // Guardado opcional para usarlo en el Home luego si deseas
+        nombreCompleto: nombre
     });
 
-    // ÉXITO DE UX: Limpiar por completo los campos del formulario de registro
     document.getElementById('reg-nombre').value = "";
     document.getElementById('reg-correo').value = "";
     document.getElementById('reg-pass').value = "";
     document.getElementById('reg-pass-confirm').value = "";
 
-    // Notificación elegante y redirección controlada al login para iniciar sesión
     alert("✨ ¡Cuenta creada con éxito!\nYa puedes ingresar usando tu correo y contraseña registrados.");
     cambiarPantalla('pantalla-login');
 }
 
-// 💡 TIP DE INTEGRACIÓN CON TU PANTALLA DE REGISTRO:
-// Cuando crees la función para guardar usuarios nuevos en 'pantalla-registro', 
-// solo debes capturar los campos y guardarlos así:
-//
-// function registrarNuevoUsuario(nuevoCorreo, nuevaContraseña) {
-//     BD_USUARIOS.push({ correo: nuevoCorreo.toLowerCase(), pass: nuevaContraseña });
-//     alert("¡Cuenta creada con éxito! Ahora puedes iniciar sesión.");
-//     cambiarPantalla('pantalla-login');
-// }
-
-// ==========================================================================
-// FUNCIÓN GLOBAL: Cambiar de Pantalla
-// ==========================================================================
 function cambiarPantalla(idPantallaDestino) {
     const pantallas = document.querySelectorAll('.contenedor-movil > section');
     pantallas.forEach(pantalla => {
@@ -123,7 +85,6 @@ function cambiarPantalla(idPantallaDestino) {
     if (pantallaDestino) {
         pantallaDestino.classList.remove('d-none');
         
-        // Cada vez que entres a esta pantalla, recalculamos la selección inicial
         if(idPantallaDestino === 'pantalla-agregar-med') {
             const columnas = document.querySelectorAll('.wheel-col');
             columnas.forEach(col => actualizarSeleccionRueda(col));
@@ -131,21 +92,16 @@ function cambiarPantalla(idPantallaDestino) {
     }
 }
 
-// ==========================================================================
-// DETECTOR TÁCTIL Y SCROLL PARA LA RUEDA DE DOSIFICACIÓN
-// ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
     const columnas = document.querySelectorAll('.wheel-col');
     
     columnas.forEach(col => {
-        // Escucha el scroll en cada columna de forma independiente
         col.addEventListener('scroll', () => {
             actualizarSeleccionRueda(col);
         });
     });
 });
 
-// Calcula cuál elemento está en el centro de la franja menta
 function actualizarSeleccionRueda(columna) {
     const items = columna.querySelectorAll('.wheel-item');
     const containerRect = columna.getBoundingClientRect();
@@ -155,7 +111,6 @@ function actualizarSeleccionRueda(columna) {
         const itemRect = item.getBoundingClientRect();
         const itemCenter = itemRect.top + (itemRect.height / 2);
         
-        // Si el elemento está alineado con el centro del contenedor, se selecciona
         if (Math.abs(containerCenter - itemCenter) < 22) {
             item.classList.add('selected');
         } else {
@@ -164,11 +119,7 @@ function actualizarSeleccionRueda(columna) {
     });
 }
 
-// ==========================================================================
-// ACCIÓN: Agregar Medicamento Dinámico a la Lista
-// ==========================================================================
 function agregarMedicamentoDinamico() {
-    // 1. Capturamos el nombre del medicamento
     const inputMed = document.getElementById('med-nombre');
     const nombre = inputMed.value.trim();
     
@@ -177,23 +128,18 @@ function agregarMedicamentoDinamico() {
         return;
     }
 
-    // 2. Capturamos los elementos que tengan la clase .selected en este instante
     const cantSelected = document.querySelector('#col-cantidad .wheel-item.selected');
     const tipoSelected = document.querySelector('#col-tipo .wheel-item.selected');
     const frecSelected = document.querySelector('#col-frecuencia .wheel-item.selected');
 
-    // 3. Extraemos su texto dinámico (Si está en movimiento usa un valor base seguro)
     const cantidad = cantSelected ? cantSelected.innerText : '1';
     const tipo = tipoSelected ? tipoSelected.innerText : 'pildora';
     const frecuencia = frecSelected ? frecSelected.innerText : 'diario';
 
-    // 4. Armamos la frase de dosificación exacta
     const dosificacionCompleta = `${cantidad} ${tipo}, ${frecuencia}`;
 
-    // 5. Obtenemos el contenedor de la lista objetivo
     const lista = document.getElementById('lista-medicamentos-dinamica');
     
-    // 6. Creamos la tarjeta idéntica a tu estructura HTML
     const nuevoItem = document.createElement('div');
     nuevoItem.className = "d-flex align-items-center justify-content-between py-2 mb-2 item-med";
     nuevoItem.innerHTML = `
@@ -207,23 +153,15 @@ function agregarMedicamentoDinamico() {
         <button class="btn btn-link text-dark fw-semibold text-sm p-0 text-decoration-none">Editar</button>
     `;
     
-    // 7. Lo inyectamos arriba de todo en la lista
     lista.insertBefore(nuevoItem, lista.firstChild);
     
-    // 8. Limpiamos el formulario
     inputMed.value = "";
 }
 
-// Limpiar inputs
 function limpiarFormularioMed() {
     document.getElementById('med-nombre').value = "";
 }
 
-// ==========================================================================
-// PANTALLA: FARMACIAS - DATA Y LÓGICA DINÁMICA
-// ==========================================================================
-
-// Base de datos simulada de farmacias con distancias y catálogo clave para búsqueda
 const BD_FARMACIAS = [
     {
         id: 1,
@@ -248,31 +186,26 @@ const BD_FARMACIAS = [
     }
 ];
 
-// Variables de estado del filtro activo
-let filtroActual = 'distancia'; // Valores posibles: 'distancia' o 'medicamento'
+let filtroActual = 'distancia';
 
-// Cargar las farmacias automáticamente cuando el documento esté listo
 document.addEventListener("DOMContentLoaded", () => {
-    // Si la pantalla de farmacias arranca visible por defecto, renderiza de una vez
     renderizarFarmacias(BD_FARMACIAS);
 });
 
-// Modificamos sutilmente tu función cambiarPantalla para que refresque la lista al entrar
 const cambiarPantallaOriginal = cambiarPantalla; 
 cambiarPantalla = function(idPantallaDestino) {
     cambiarPantallaOriginal(idPantallaDestino);
     if(idPantallaDestino === 'pantalla-farmacias') {
-        document.getElementById('buscar-farmacia').value = ""; // Limpia búsquedas previas
+        document.getElementById('buscar-farmacia').value = "";
         ejecutarFiltroYBusqueda();
     }
 }
 
-// Función encargada de dibujar los elementos en el HTML
 function renderizarFarmacias(lista) {
     const contenedor = document.getElementById('lista-farmacias-dinamica');
     if (!contenedor) return;
     
-    contenedor.innerHTML = ""; // Limpiar contenido anterior
+    contenedor.innerHTML = "";
 
     if(lista.length === 0) {
         contenedor.innerHTML = `
@@ -303,7 +236,6 @@ function renderizarFarmacias(lista) {
     });
 }
 
-// Controla los botones de filtro inferiores
 function alternarFiltro(tipoFiltro) {
     filtroActual = tipoFiltro;
     
@@ -325,28 +257,22 @@ function alternarFiltro(tipoFiltro) {
     ejecutarFiltroYBusqueda();
 }
 
-// Filtra en tiempo real al escribir en el input
 function filtrarFarmacias() {
     ejecutarFiltroYBusqueda();
 }
 
-// Procesa tanto el texto de búsqueda como el ordenamiento/filtrado seleccionado
 function ejecutarFiltroYBusqueda() {
     const textoBusqueda = document.getElementById('buscar-farmacia').value.toLowerCase().trim();
     
-    // 1. Filtrar los datos por texto (nombre de farmacia o catálogo de medicamentos)
     let farmaciasFiltradas = BD_FARMACIAS.filter(farmacia => {
         const coincideNombre = farmacia.nombre.toLowerCase().includes(textoBusqueda);
         const coincideMedicamento = farmacia.medicamentos.some(med => med.includes(textoBusqueda));
         return coincideNombre || coincideMedicamento;
     });
 
-    // 2. Aplicar la lógica del filtro seleccionado
     if (filtroActual === 'distancia') {
-        // Ordena de menor a mayor distancia (la más cercana primero)
         farmaciasFiltradas.sort((a, b) => a.distanciaKm - b.distanciaKm);
     } else if (filtroActual === 'medicamento' && textoBusqueda !== "") {
-        // Da prioridad en el orden a las farmacias que tengan el medicamento exacto escrito en el buscador
         farmaciasFiltradas.sort((a, b) => {
             const tieneA = a.medicamentos.includes(textoBusqueda) ? 1 : 0;
             const tieneB = b.medicamentos.includes(textoBusqueda) ? 1 : 0;
@@ -354,15 +280,9 @@ function ejecutarFiltroYBusqueda() {
         });
     }
 
-    // 3. Renderizar los resultados procesados
     renderizarFarmacias(farmaciasFiltradas);
 }
 
-// ==========================================================================
-// PANTALLA: HISTORIAL - DATA EXTENSA CON SCROLL INTERNO CONTROLADO
-// ==========================================================================
-
-// Base de datos robusta con 10 registros para simular historial denso
 const BD_HISTORIAL = [
     { fecha: "Ene 25, 2026", estado: "Recibido", tipoIcono: "check", meds: "Metformina, Acetaminofen, Loratadina" },
     { fecha: "Ene 10, 2026", estado: "Pendiente", tipoIcono: "clock", meds: "Metformina, Insulina" },
@@ -376,21 +296,18 @@ const BD_HISTORIAL = [
     { fecha: "Ago 14, 2025", estado: "Recibido", tipoIcono: "check", meds: "Acetaminofén 500mg" }
 ];
 
-// Estado de la pantalla: false = recortado a los primeros 3, true = ver todo el historial
 let historialViendoTodo = false;
 
-// Reiniciar el estado de la pantalla cada vez que el usuario entre al Historial
 const cambiarPantallaHistorialCompleto = cambiarPantalla;
 cambiarPantalla = function(idPantallaDestino) {
     cambiarPantallaHistorialCompleto(idPantallaDestino);
     if(idPantallaDestino === 'pantalla-historial') {
-        historialViendoTodo = false; // Forzar estado inicial recortado
+        historialViendoTodo = false; 
         
-        // Dejar el contenedor superior limpio y sin scroll al inicio
         const wrapper = document.getElementById('wrapper-scroll-historial');
         if(wrapper) {
-            wrapper.style.overflowY = "hidden"; // Oculta el scroll al principio
-            wrapper.scrollTop = 0; // Regresa arriba de todo
+            wrapper.style.overflowY = "hidden"; 
+            wrapper.scrollTop = 0; 
         }
         
         const btnVerMas = document.getElementById('btn-historial-ver-mas');
@@ -403,14 +320,12 @@ cambiarPantalla = function(idPantallaDestino) {
     }
 }
 
-// Renderiza los elementos basándose en si está expandido o recortado
 function renderizarHistorialDinamico() {
     const contenedor = document.getElementById('lista-historial-dinamica');
     if (!contenedor) return;
 
     contenedor.innerHTML = "";
     
-    // Si viendoTodo es false muestra los primeros 3, si es true clona y muestra los 10
     const listaAMostrar = historialViendoTodo ? BD_HISTORIAL : BD_HISTORIAL.slice(0, 3);
 
     listaAMostrar.forEach(item => {
@@ -440,51 +355,38 @@ function renderizarHistorialDinamico() {
     });
 }
 
-// Detonador del botón Ver Más
 function cargarMasHistorial() {
-    historialViendoTodo = true; // Cambiamos el estado a mostrar todo
-    renderizarHistorialDinamico(); // Volvemos a dibujar las 10 tarjetas
+    historialViendoTodo = true; 
+    renderizarHistorialDinamico(); 
     
-    // Habilitamos el scroll interno para que el usuario pueda deslizar dentro de la caja controlada
     const wrapper = document.getElementById('wrapper-scroll-historial');
     if(wrapper) {
         wrapper.style.overflowY = "auto";
     }
     
-    // Ocultamos el botón de forma limpia ya que no hay más registros que cargar
     document.getElementById('btn-historial-ver-mas').classList.add('d-none');
 }
 
-// Acción ilustrativa PDF
 function simularDescargaPDF() {
     alert("📄 Generando reporte completo...\nSe han procesado los 10 registros de tu historial en un documento PDF.");
 }
 
-// ==========================================================================
-// PANTALLA: FEEDBACK - CONTROL INTERACTIVO
-// ==========================================================================
-
-// Variables de estado del formulario de feedback
 let respuestasFeedback = {
     entregaATiempo: null,
     facilidadUso: null,
     calificacionEstrellas: 0
 };
 
-// Reiniciar el formulario de feedback de forma limpia al entrar a la pantalla
 const cambiarPantallaFeedbackOriginal = cambiarPantalla;
 cambiarPantalla = function(idPantallaDestino) {
     cambiarPantallaFeedbackOriginal(idPantallaDestino);
     if(idPantallaDestino === 'pantalla-feedback') {
         respuestasFeedback = { entregaATiempo: null, facilidadUso: null, calificacionEstrellas: 0 };
         
-        // Limpiar chips Sí/No
         document.querySelectorAll('.btn-chip-sino').forEach(btn => btn.classList.remove('selected-chip'));
         
-        // Apagar estrellas
         document.querySelectorAll('.estrella-voto').forEach(star => star.classList.remove('active-star'));
         
-        // Resetear caja de texto y contador
         const txtArea = document.getElementById('feedback-comentarios');
         if(txtArea) txtArea.value = "";
         
@@ -493,35 +395,29 @@ cambiarPantalla = function(idPantallaDestino) {
     }
 }
 
-// Controla la selección exclusiva de los botones Sí / No
 function seleccionarSino(boton, categoria, valor) {
-    // Buscar los hermanos directos del botón seleccionado para removerles la marca previa
     const contenedorPadre = boton.parentElement;
     contenedorPadre.querySelectorAll('.btn-chip-sino').forEach(btn => btn.classList.remove('selected-chip'));
     
-    // Marcar el botón presionado
     boton.classList.add('selected-chip');
     
-    // Guardar en la estructura de datos
     if(categoria === 'entrega') respuestasFeedback.entregaATiempo = valor;
     if(categoria === 'facilidad') respuestasFeedback.facilidadUso = valor;
 }
 
-// Controla la acumulación interactiva de las estrellas
 function calificarEstrellas(voto) {
     respuestasFeedback.calificacionEstrellas = voto;
     const estrellas = document.querySelectorAll('.estrella-voto');
     
     estrellas.forEach((estrella, indice) => {
         if(indice < voto) {
-            estrella.classList.add('active-star'); // Enciende las estrellas hasta el número pulsado
+            estrella.classList.add('active-star'); 
         } else {
-            estrella.classList.remove('active-star'); // Apaga el resto hacia la derecha
+            estrella.classList.remove('active-star'); 
         }
     });
 }
 
-// Actualiza el medidor numérico del textarea
 function actualizarContador() {
     const txtArea = document.getElementById('feedback-comentarios');
     const contador = document.getElementById('contador-caracteres');
@@ -530,46 +426,37 @@ function actualizarContador() {
     }
 }
 
-// Ejecuta la simulación de almacenamiento del feedback
 function enviarFeedback() {
-    // Validamos que por lo menos haya seleccionado la puntuación de estrellas
     if(respuestasFeedback.calificacionEstrellas === 0) {
         alert("⚠️ Por favor, selecciona una calificación con estrellas antes de enviar.");
         return;
     }
 
     alert(`✨ ¡Muchas gracias por tu opinión!\nCalificación: ${respuestasFeedback.calificacionEstrellas} estrellas.\nComentarios enviados con éxito.`);
-    cambiarPantalla('pantalla-home'); // Lo regresa automáticamente al Home
+    cambiarPantalla('pantalla-home'); 
 }
-
-// ==========================================================================
-// PANTALLA: TELÉFONO - MÁQUINA DE MARCADO INTERACTIVA
-// ==========================================================================
 
 const NUMERO_PREDETERMINADO = "01-8000-MEDIC";
 let numeroActual = NUMERO_PREDETERMINADO;
 let estadoMute = false;
 let estadoAltavoz = false;
 
-// Interceptamos la navegación para configurar la pantalla cada vez que se llame
 const cambiarPantallaTelefono = cambiarPantalla;
 cambiarPantalla = function(idPantallaDestino) {
     cambiarPantallaTelefono(idPantallaDestino);
     
     if(idPantallaDestino === 'pantalla-telefono') {
-        // Reiniciamos al número de soporte base y estados apagados
         numeroActual = NUMERO_PREDETERMINADO;
         estadoMute = false;
         estadoAltavoz = false;
         
         document.getElementById('pantalla-numero-digitado').innerText = numeroActual;
         document.getElementById('estado-llamada-texto').innerText = "CONECTANDO LÍNEA...";
-        document.getElementById('estado-llamada-texto').style.color = "#1CE3B0"; // Verde activo
+        document.getElementById('estado-llamada-texto').style.color = "#1CE3B0"; 
 
         document.getElementById('btn-util-mute').classList.remove('active-util');
         document.getElementById('btn-util-altavoz').classList.remove('active-util');
         
-        // Simular sonido de llamada conectando a los 1.5 segundos
         setTimeout(() => {
             const txtEstado = document.getElementById('estado-llamada-texto');
             if(txtEstado && numeroActual === NUMERO_PREDETERMINADO) {
@@ -579,23 +466,19 @@ cambiarPantalla = function(idPantallaDestino) {
     }
 }
 
-// Evento al presionar cualquier número del teclado
 function presionarTecla(numero) {
-    // Si es la primera tecla que hunde y estaba el número de soporte base, lo limpiamos para escribir el nuevo
     if(numeroActual === NUMERO_PREDETERMINADO) {
         numeroActual = "";
         document.getElementById('estado-llamada-texto').innerText = "MARCANDO NÚMERO NUEVO...";
         document.getElementById('estado-llamada-texto').style.color = "#8A9499";
     }
     
-    // Validar límite para que no se desborde la pantalla móvil del prototipo (máximo 12 dígitos)
     if(numeroActual.length < 14) {
         numeroActual += numero;
         document.getElementById('pantalla-numero-digitado').innerText = numeroActual;
     }
 }
 
-// Controla los toggles visuales de Silenciar y Altavoz
 function alternarUtilidad(tipo) {
     if(tipo === 'mute') {
         estadoMute = !estadoMute;
@@ -609,12 +492,11 @@ function alternarUtilidad(tipo) {
     }
 }
 
-// Cierra la llamada y te regresa automáticamente de donde venías (Home)
 function colgarYRegresar() {
     document.getElementById('estado-llamada-texto').innerText = "LLAMADA FINALIZADA";
     document.getElementById('estado-llamada-texto').style.color = "#FF4A4A";
     
     setTimeout(() => {
         cambiarPantalla('pantalla-home');
-    }, 400); // Pequeña pausa dramática de 400ms para simular que cuelga antes de cambiar la pantalla
+    }, 400); 
 }
