@@ -20,6 +20,60 @@
         class="col-12 col-md-5 col-lg-4 bg-white shadow-lg min-vh-100 position-relative contenedor-movil"
       >
         <section
+  id="pantalla-bienvenida"
+  class="d-flex flex-column justify-content-between h-100"
+  style="
+    background-image: url('img/Imagen de Fondo.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 2.5rem 2rem;
+  "
+>
+  <div class="text-center mt-3">
+    <h1 class="fw-bold h1 mb-1">MedicApp</h1>
+    <img
+      src="img/Logo.png"
+      alt="MedicApp Logo"
+      class="mb-2"
+      style="width: 140px; height: auto"
+    />
+    <p class="text-muted text-sm px-2">Descubre cómo mejorar el control y gestión de tus medicamentos en un minuto.</p>
+  </div>
+
+  <div class="my-3">
+    <div class="ratio ratio-16x9 shadow-sm video-mockup-container">
+      <iframe
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+        title="Explicación del funcionamiento de MedicApp"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+
+  <div class="text-center mb-3">
+    <button
+      type="button"
+      class="btn btn-verde-menta w-100 fw-bold py-2.5 shadow-sm mb-3"
+      onclick="cambiarPantalla('pantalla-login')"
+    >
+      Ingresar a la Aplicación
+    </button>
+
+    <div class="p-3 bg-light border border-dashed rounded-3">
+      <small class="text-muted d-block fw-semibold text-xs mb-1 text-uppercase tracking-wider">
+        ⚡ Acceso de Prueba Rápido
+      </small>
+      <div class="d-flex justify-content-around align-items-center text-xs">
+        <span><strong>Usuario:</strong> test@medicapp.com</span>
+        <span class="text-muted">|</span>
+        <span><strong>Clave:</strong> 123456</span>
+      </div>
+    </div>
+  </div>
+</section>
+        
+        <section
           id="pantalla-login"
           class="d-flex flex-column justify-content-center h-100"
           style="
